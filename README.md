@@ -2,7 +2,7 @@
 
 Parse and search (grep) Apple Plist files, leveraging Python's builtin [`plistlib`](https://docs.python.org/3/library/plistlib.html) standard library.
 
-The search string is specified as a regex.
+The search string is specified as a case-insensitive regex.
 
 Accepts one or more filenames.
 

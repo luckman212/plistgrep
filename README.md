@@ -45,3 +45,14 @@ $ plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist
   ]
 }
 ```
+
+## Silent Mode
+
+If no matches are found, the program's exitcode will be 1. So, by redirecting its output to the bitbucket, it can be used "quietly" in a shell script (similar to `grep -q`):
+
+```
+if ! plistgrep Foo /path/to/bar.plist &>/dev/null ; then
+  echo "nothing found, proceeding to bar baz the quuxes..."
+  ...
+fi
+```

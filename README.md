@@ -1,8 +1,12 @@
 # plistgrep
 
-Parse and search (grep) Apple Plist files, leveraging Python's builtin [`plistlib`](https://docs.python.org/3/library/plistlib.html) standard library. The search string is specified as a regex.
+Parse and search (grep) Apple Plist files, leveraging Python's builtin [`plistlib`](https://docs.python.org/3/library/plistlib.html) standard library.
+
+The search string is specified as a regex.
 
 Accepts one or more filenames.
+
+Output is in JSON format.
 
 ## Syntax
 

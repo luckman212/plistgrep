@@ -4,13 +4,13 @@ Parse and search (grep) Apple Plist files, leveraging Python's builtin [`plistli
 
 Accepts one or more filenames.
 
-# Syntax
+## Syntax
 
 ```
 plistgrep <regex> <filename> [filename...]
 ```
 
-# Example
+## Example
 
 ```
 $ plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist

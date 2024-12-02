@@ -1,1 +1,104 @@
-/Users/luke/Sync/Scripts/plistgrep
+#!/usr/bin/env python3
+
+import plistlib
+import re
+import sys
+import json
+import base64
+import os
+from pathlib import Path
+from datetime import datetime
+
+def custom_encoder(obj):
+    if isinstance(obj, datetime):
+        return obj.isoformat(timespec='seconds') + 'Z'
+    elif isinstance(obj, (bytes, bytearray)):
+        return base64.b64encode(obj).decode('utf-8')
+    elif isinstance(obj, tuple):
+        return list(obj)
+    return str(obj)
+
+def grep_plist(regex, filename):
+    try:
+        pattern = re.compile(regex, re.IGNORECASE)
+    except re.error as e:
+        print(f'regex error: {e}', file=sys.stderr)
+        return False
+    try:
+        with open(filename, 'rb') as file:
+            plist_data = plistlib.load(file)
+    except plistlib.InvalidFileException:
+        print(f'failed to parse {filename}', file=sys.stderr)
+        return False
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return False
+
+    matches = []
+
+    def encode_if_bytes(value):
+        if isinstance(value, (bytes, bytearray)):
+            return base64.b64encode(value).decode('utf-8')
+        return value
+
+    def add_result(matchstr, key, val):
+        matches.append({
+            "matched_string": matchstr,
+            "key": key.lstrip('root/'),
+            "value": val
+        })
+
+    def search(data, path='root'):
+        if isinstance(data, dict):
+            for key, value in data.items():
+                key_path = f'{path}/{key}'
+                encoded_value = encode_if_bytes(value)
+                key_match = pattern.search(str(key))
+                if key_match:
+                    add_result(key_match.group(), key_path, encoded_value)
+                if isinstance(encoded_value, (str, int, float, bool, datetime)):
+                    value_match = pattern.search(str(encoded_value))
+                    if value_match:
+                        add_result(value_match.group(), key_path, encoded_value)
+                elif isinstance(value, (dict, list, tuple)):
+                    search(value, key_path)
+        elif isinstance(data, (list, tuple)):
+            for index, item in enumerate(data):
+                list_path = f'{path}[{index}]'
+                encoded_item = encode_if_bytes(item)
+                if isinstance(encoded_item, (str, int, float, bool, datetime)):
+                    value_match = pattern.search(str(encoded_item))
+                    if value_match:
+                        add_result(value_match.group(), list_path, encoded_item)
+                elif isinstance(item, (dict, list, tuple)):
+                    search(item, list_path)
+
+    search(plist_data)
+    if not matches:
+        return False
+    result = {
+        "filename": str(filename),
+        "match_count": len(matches),
+        "matches": matches
+    }
+    print(json.dumps(result, indent=2, default=custom_encoder))
+    return True
+
+if __name__ == '__main__':
+    try:
+        if len(sys.argv) < 3:
+            print(f'Usage: {os.path.basename(sys.argv[0])} <regex> <filename> [filename...]')
+            sys.exit(1)
+        regex_input = sys.argv[1]
+        success = 0
+        for f in sys.argv[2:]:
+            filename_input = Path(f).resolve()
+            if grep_plist(regex_input, filename_input):
+                success += 1
+    except KeyboardInterrupt:
+        sys.exit(130)
+    except Exception as e:
+        print(e, file=sys.stderr)
+
+    if not success:
+        sys.exit(1)

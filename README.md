@@ -46,7 +46,7 @@ $ plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist
 }
 ```
 
-## Silent Mode
+## Silent mode
 
 If no matches are found, the program's exitcode will be 1. So, by redirecting its output to the bitbucket, it can be used "quietly" in a shell script (similar to `grep -q`):
 
@@ -66,7 +66,7 @@ plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist |
 jq -r '.matches[] | "\(.key) => \(.value)"'
 ```
 
-### Example output
+#### Sample output
 
 ```
 ABShowPeoplePickerDebugPanel => false

@@ -14,10 +14,15 @@ Output is in JSON format.
 plistgrep <regex> <filename> [filename...]
 ```
 
-## Example
+## Example use
 
 ```
-$ plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist
+plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist
+```
+
+#### Sample output 1
+
+```
 {
   "filename": "/Users/luke/Library/Preferences/com.apple.AddressBook.plist",
   "match_count": 4,
@@ -66,7 +71,7 @@ plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist |
 jq -r '.matches[] | "\(.key) => \(.value)"'
 ```
 
-#### Sample output
+#### Sample output 2
 
 ```
 ABShowPeoplePickerDebugPanel => false

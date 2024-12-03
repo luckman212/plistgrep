@@ -62,5 +62,15 @@ fi
 If you have [jq](https://jqlang.github.io/jq/) installed, you can emulate the plaintext output of `plutil -p` with something like:
 
 ```
-plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist | jq -r '.matches[] | "\(.key) => \(.value)"'
+plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist |
+jq -r '.matches[] | "\(.key) => \(.value)"'
+```
+
+### Example output
+
+```
+ABShowPeoplePickerDebugPanel => false
+NSToolbar Configuration NSPreferences/TB Is Shown => 1
+ABLastImportShown => true
+ABShowDebugMenu => true
 ```

@@ -57,7 +57,7 @@ If no matches are found, the program's exitcode will be 1. So, by redirecting it
 
 ```
 if ! plistgrep Foo /path/to/bar.plist &>/dev/null ; then
-  echo "nothing found, proceeding to bar baz the quuxes..."
+  echo "nothing found, proceeding to Baz the Quuxes..."
   ...
 fi
 ```
@@ -79,3 +79,7 @@ NSToolbar Configuration NSPreferences/TB Is Shown => 1
 ABLastImportShown => true
 ABShowDebugMenu => true
 ```
+
+## Why?
+
+This tool was inspired by [this](https://apple.stackexchange.com/questions/476842/is-there-any-way-to-grep-a-binary-plist) StackExchange/AskDifferent post.

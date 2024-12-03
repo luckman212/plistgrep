@@ -56,3 +56,11 @@ if ! plistgrep Foo /path/to/bar.plist &>/dev/null ; then
   ...
 fi
 ```
+
+## Emulating plutil -p output
+
+If you have [jq](https://jqlang.github.io/jq/) installed, you can emulate the plaintext output of `plutil -p` with something like:
+
+```
+plistgrep 'Shown?' ~/Library/Preferences/com.apple.AddressBook.plist | jq -r '.matches[] | "\(.key) => \(.value)"'
+```
